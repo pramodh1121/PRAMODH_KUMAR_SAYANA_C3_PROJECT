@@ -1,20 +1,36 @@
-public class RestaurantService {
-    private static String[] restaurant = {"Haldiram's","Gayatri Bhojnalaya","Naivedhyam","Veeraswami","Reddy’s Gokul Brindavan Restaurant",
-            "Vishnuji Ki Rasoi","Barbecue Restaurant","The Breakfast Story","Ashoka Restaurant"};
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
-    public String findRestaurantByName(String name) throws notFound {
-        for(String s:restaurant) {
-            if(s.contains(name)) {
-                return s;
+public class RestaurantService {
+    private static List<Restaurant> restaurants = new ArrayList<>();
+
+    // Method to find restaurant by name and if not exits than throw exception
+    public Restaurant findRestaurantByName(String restaurantName) throws restaurantNotFoundException {
+        for(Restaurant restaurant: restaurants) {
+            if(restaurant.getName().equals(restaurantName)) {
+                return restaurant;
             }
         }
-        throw new notFound("Restaurant not found");
 
+        //Throw restaurantNotFound exception if no restaurant is found
+        throw new restaurantNotFoundException(restaurantName);
     }
-}
 
-class notFound extends Exception{
-    public notFound(String msg) {
-        super(msg);
+
+    public Restaurant addRestaurant(String name, String location, LocalTime openingTime, LocalTime closingTime) {
+        Restaurant newRestaurant = new Restaurant(name, location, openingTime, closingTime);
+        restaurants.add(newRestaurant);
+        return newRestaurant;
+    }
+
+    public Restaurant removeRestaurant(String restaurantName) throws restaurantNotFoundException {
+        Restaurant restaurantToBeRemoved = findRestaurantByName(restaurantName);
+        restaurants.remove(restaurantToBeRemoved);
+        return restaurantToBeRemoved;
+    }
+
+    public List<Restaurant> getRestaurants() {
+        return restaurants;
     }
 }
